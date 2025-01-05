@@ -8,7 +8,7 @@ if (!isset($_SESSION['student_id'])) {
 
 $student_id = $_SESSION['student_id'];
 
-// Get the form ID from the query string
+
 if (!isset($_GET['form_id']) || empty($_GET['form_id'])) {
     echo "No form selected.";
     exit;
@@ -16,7 +16,6 @@ if (!isset($_GET['form_id']) || empty($_GET['form_id'])) {
 
 $form_id = intval($_GET['form_id']);
 
-// Fetch form name
 $form_query = $conn->prepare("SELECT form_name FROM forms WHERE id = ?");
 $form_query->bind_param('i', $form_id);
 $form_query->execute();
@@ -29,7 +28,7 @@ if ($form_result->num_rows === 0) {
 
 $form = $form_result->fetch_assoc();
 
-// Fetch submitted responses
+
 $responses_query = $conn->prepare("
     SELECT fr.id as response_id, ff.field_name, fr.response 
     FROM form_responses fr 
@@ -54,7 +53,6 @@ body {
     color: #333;
 }
 
-/* Header Styles */
 header {
     background-color: #4CAF50;
     color: white;
@@ -83,7 +81,6 @@ header .logo {
     font-weight: bold;
 }
 
-/* Profile Section */
 .profile-container {
     display: flex;
     align-items: center;
@@ -113,7 +110,7 @@ header .logo {
     color: #666;
 }
 
-/* Forms Section */
+
 .forms-container {
     margin: 20px;
     padding: 20px;
@@ -179,7 +176,7 @@ button[type="submit"]:hover {
     background-color: #45a049;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .profile-container {
         flex-direction: column;

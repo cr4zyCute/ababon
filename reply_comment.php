@@ -16,7 +16,7 @@ $query = "INSERT INTO comments (post_id, student_id, parent_comment_id, content,
           VALUES ('$post_id', '$student_id', " . ($parent_comment_id === null ? 'NULL' : "'$parent_comment_id'") . ", '$content', NOW())";
 
 if (mysqli_query($conn, $query)) {
-    header("Location: post.php?post_id=$post_id"); // Redirect to the post
+    header("Location: post.php?post_id=$post_id");
 } else {
     echo "Error: " . mysqli_error($conn);
 }

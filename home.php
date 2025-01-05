@@ -20,19 +20,18 @@ if ($result && mysqli_num_rows($result) > 0) {
 }
 
 if ($content || !empty($mediaFiles['name'][0])) {
-    // Save post content to database
+
     $query = "INSERT INTO posts (student_id, content, created_at) VALUES ('$student_id', '$content', NOW())";
     mysqli_query($conn, $query);
-    $postId = mysqli_insert_id($conn); // Get the ID of the newly created post
+    $postId = mysqli_insert_id($conn);
 
-    // Handle media upload if any media files are provided
     if (!empty($mediaFiles['name'][0])) {
         foreach ($mediaFiles['tmp_name'] as $key => $tmp_name) {
             if ($mediaFiles['error'][$key] === 0) {
                 $filePath = 'uploads/' . basename($mediaFiles['name'][$key]);
                 move_uploaded_file($tmp_name, $filePath);
 
-                // Update the post with media path
+
                 $query = "UPDATE posts SET media = '$filePath' WHERE id = '$postId'";
                 mysqli_query($conn, $query);
             }
@@ -73,7 +72,7 @@ if ($result->num_rows > 0) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="./sample.css">
+    <link rel="stylesheet" href="./css/home.css">
 
 </head>
 
@@ -136,7 +135,7 @@ if ($result->num_rows > 0) {
             </div>
             <div class="left-section">
                 <?php
-                // Set the timezone to the Philippines
+
                 date_default_timezone_set("Asia/Manila");
 
                 function timeAgo($time, $tense = 'ago')
@@ -147,29 +146,29 @@ if ($result->num_rows > 0) {
                         trigger_error("Wrong time format: $time", E_USER_ERROR);
                     }
 
-                    $now = new DateTime('now', new DateTimeZone('Asia/Manila')); // Ensure timezone is set
+                    $now = new DateTime('now', new DateTimeZone('Asia/Manila'));
                     $then = new DateTime($time, new DateTimeZone('Asia/Manila'));
                     $diff = $now->diff($then)->format('%y %m %d %h %i');
                     $diff = explode(' ', $diff);
                     $diff = array_combine($periods, $diff);
-                    $diff = array_filter($diff); // Remove zero values
+                    $diff = array_filter($diff);
 
-                    $period = key($diff); // Get the first non-zero period
-                    $value = current($diff); // Get the corresponding value
+                    $period = key($diff);
+                    $value = current($diff);
 
                     if ($period === 'minute' && $value == 0) {
-                        // If less than 1 minute, show as "1 minute ago"
+
                         $value = 1;
                     }
 
                     if ($value) {
                         if ($value == 1) {
-                            $period = rtrim($period, 's'); // Singular (remove 's')
+                            $period = rtrim($period, 's');
                         }
                         return "$value $period $tense";
                     }
 
-                    return "just now"; // Fallback for any unexpected cases
+                    return "just now";
                 }
 
                 $query = "SELECT p.*, s.firstname, s.lastname, s.image AS profile_image, 
@@ -184,9 +183,7 @@ if ($result->num_rows > 0) {
                     while ($post = mysqli_fetch_assoc($result)) {
                         echo '<div class="post">';
                         echo '<div class="post-header">';
-                        //     echo '<div class="delete-container">';
-                        // echo '<button class="delete-button" onclick="deletePost(' . htmlspecialchars($post['id']) . ')"><i class="bi bi-trash3-fill"></i></button>';
-                        // echo '</div>';
+
                         echo '<img src="images-data/' . htmlspecialchars($post['profile_image']) . '" alt="Profile Image" class="profile-pic">';
                         echo '<div class="post-user-info">';
                         echo '<strong>' . htmlspecialchars($post['firstname'] . ' ' . $post['lastname']) . '</strong>';
@@ -271,7 +268,6 @@ if ($result->num_rows > 0) {
         ORDER BY a.created_at DESC";
             $result = mysqli_query($conn, $sql);
 
-            // Fetch student details (if needed)
             $query = "SELECT * FROM student WHERE id = '$student_id'";
             $studentResult = mysqli_query($conn, $query);
 

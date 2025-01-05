@@ -8,7 +8,7 @@ if (!isset($_SESSION['student_id'])) {
 include 'database/dbcon.php';
 $student_id = $_SESSION['student_id'];
 
-// Get the form ID from the query string
+
 if (!isset($_GET['form_id']) || empty($_GET['form_id'])) {
     echo "No form selected.";
     exit;
@@ -16,7 +16,7 @@ if (!isset($_GET['form_id']) || empty($_GET['form_id'])) {
 
 $form_id = intval($_GET['form_id']);
 
-// Fetch form name
+
 $form_query = $conn->prepare("SELECT form_name FROM forms WHERE id = ?");
 $form_query->bind_param('i', $form_id);
 $form_query->execute();
@@ -29,8 +29,6 @@ if ($form_result->num_rows === 0) {
 
 $form = $form_result->fetch_assoc();
 
-// Fetch submitted responses
-// Fetch submitted responses
 $responses_query = $conn->prepare("
     SELECT fr.id as response_id, ff.field_name, fr.response 
     FROM form_responses fr 
@@ -48,6 +46,7 @@ $delete_responses_query->execute();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,7 +82,8 @@ $delete_responses_query->execute();
             margin: 20px 0;
         }
 
-        table th, table td {
+        table th,
+        table td {
             padding: 12px;
             text-align: left;
         }
@@ -150,6 +150,7 @@ $delete_responses_query->execute();
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Edit Responses for <?= htmlspecialchars($form['form_name']); ?></h1>
@@ -161,33 +162,22 @@ $delete_responses_query->execute();
                         <tr>
                             <th>Field</th>
                             <th>Response</th>
-                           
+
                         </tr>
                     </thead>
                     <tbody>
-                    <?php while ($response = $responses->fetch_assoc()): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($response['field_name']); ?></td>
-                            <td>
-                                <input 
-                                    type="text" 
-                                    name="responses[<?= $response['response_id']; ?>]" 
-                                    value="<?= htmlspecialchars($response['response']); ?>">
-                            </td>
-                            <!-- <td>
-                                <form action="delete_field.php" method="POST" style="display:inline;">
-                                    <input type="hidden" name="field_id" value="<?= $response['response_id']; ?>">
-                                    <input type="hidden" name="form_id" value="<?= $form_id; ?>">
-                                    <button 
-                                        type="submit" 
-                                        class="delete-button" 
-                                        onclick="return confirm('Are you sure you want to delete this field?');">
-                                        Delete
-                                    </button>
-                                </form>
-                            </td> -->
-                        </tr>
-                    <?php endwhile; ?>
+                        <?php while ($response = $responses->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($response['field_name']); ?></td>
+                                <td>
+                                    <input
+                                        type="text"
+                                        name="responses[<?= $response['response_id']; ?>]"
+                                        value="<?= htmlspecialchars($response['response']); ?>">
+                                </td>
+
+                            </tr>
+                        <?php endwhile; ?>
                     </tbody>
                 </table>
                 <button type="submit">Save Changes</button>
@@ -198,4 +188,5 @@ $delete_responses_query->execute();
         <a href="studentProfile.php">Back to Dashboard</a>
     </div>
 </body>
+
 </html>

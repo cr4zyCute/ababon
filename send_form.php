@@ -8,13 +8,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Invalid form_id or student_id.");
     }
 
-    // Handle responses
     if (isset($_POST['responses']) && is_array($_POST['responses'])) {
         foreach ($_POST['responses'] as $field_id => $response) {
             $field_id = intval($field_id);
             $response = $conn->real_escape_string($response);
 
-            // Insert into a table to save responses (e.g., form_responses)
             $stmt = $conn->prepare("INSERT INTO form_responses (form_id, field_id, student_id, response) VALUES (?, ?, ?, ?)");
             $stmt->bind_param("iiis", $form_id, $field_id, $student_id, $response);
 
@@ -24,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Send email (existing code)
     $student_result = $conn->query("SELECT email FROM credentials WHERE id = $student_id");
     if ($student_result && $student = $student_result->fetch_assoc()) {
         $to = $student['email'];
@@ -104,9 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .popup img {
-            width: 80px; /* Adjust size as needed */
+            width: 80px; 
             height: 80px;
-            margin: 20px auto; /* Add spacing around the image */
+            margin: 20px auto; 
         }
 
         .popup p {
@@ -115,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .close-btn {
-            background: #4CAF50; /* Green for success */
+            background: #4CAF50; 
             color: white;
             border: none;
             padding: 10px 15px;

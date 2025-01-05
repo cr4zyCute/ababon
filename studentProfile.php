@@ -1,7 +1,5 @@
 <?php
-    // <div class="card">
-    //     <h3></h3>
-    // </div>
+
 require 'database/dbcon.php';
 session_start(); 
 
@@ -159,7 +157,7 @@ $forms_query->close();
 <div class="popup-edit" id="loginPopup">
        <span class="close">&times;</span>
   <div class="grid-container">
-    <!-- Profile Card -->
+   
     <div class="card">
         <form action="studentProfile.php" method="POST" enctype="multipart/form-data">
           <div class="profile-picture">
@@ -191,7 +189,7 @@ $forms_query->close();
 if (!empty($_SESSION['student_id'])) {
     $student_id = $_SESSION['student_id'];
 
-    // Query to fetch student details
+  
     $query = "
         SELECT student.*, credentials.email
         FROM student
@@ -210,7 +208,6 @@ if (!empty($_SESSION['student_id'])) {
         exit();
     }
 
-    // Query to fetch forms assigned to the student
     $forms_query = $conn->prepare("
         SELECT f.id AS form_id, f.form_name 
         FROM student_forms sf
@@ -222,28 +219,10 @@ if (!empty($_SESSION['student_id'])) {
     $forms_result = $forms_query->get_result();
 
     if ($forms_result->num_rows > 0) {
-       // echo "<h1>Forms for " . htmlspecialchars($student['firstname']) . " " . htmlspecialchars($student['lastname']) . "</h1>";
+      
         while ($form = $forms_result->fetch_assoc()) {
             $form_id = $form['form_id'];
-            // echo "<h2>Form Name: " . htmlspecialchars($form['form_name']) . "</h2>";
-
-            // // Fetch fields
-            // $fields_query = $conn->prepare("SELECT * FROM form_fields WHERE form_id = ?");
-            // $fields_query->bind_param('i', $form_id);
-            // $fields_query->execute();
-            // $fields_result = $fields_query->get_result();
-
-            // if ($fields_result->num_rows > 0) {
-            //     echo "<h3>Fields:</h3><ul>";
-            //     while ($field = $fields_result->fetch_assoc()) {
-            //         echo "<li>" . htmlspecialchars($field['field_name']) . " (Type: " . htmlspecialchars($field['field_type']) . ", Required: " . ($field['is_required'] ? "Yes" : "No") . ")</li>";
-            //     }
-            //     echo "</ul>";
-            // } else {
-            //     echo "<p>No fields found for this form.</p>";
-            // }
-
-            // Fetch responses
+      
             $responses_query = $conn->prepare("
                 SELECT fr.response, ff.field_name 
                 FROM form_responses fr
@@ -425,14 +404,6 @@ if (!empty($_SESSION['student_id'])) {
     <div class="card">
         <h3>Credentials</h3>
         <p><strong>Email:</strong> <?= htmlspecialchars($student['email']) ?></p>
-<!--         
-        <p>
-            <strong>Password:</strong>
-            <span id="passwordField"><?= htmlspecialchars($student['password']) ?></span>
-            <button id="togglePassword" style="background: none; border: none; cursor: pointer; margin-left: 10px;">
-                <i id="eyeIcon" class="bi bi-eye-fill"></i>
-            </button>
-        </p>      -->
 
     </div>
 </div>
@@ -525,7 +496,7 @@ if ($result) {
             <?php if ($forms_result->num_rows > 0): ?>
                 <ul>
                     <?php
-                    // Reset result pointer to reuse $forms_result
+                
                     $forms_result->data_seek(0);
                     while ($form = $forms_result->fetch_assoc()): ?>
                         <li>

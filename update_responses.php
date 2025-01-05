@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     foreach ($responses as $response_id => $response) {
-        // Update each response in the database
+
         $update_query = $conn->prepare("
             UPDATE form_responses 
             SET response = ? 
