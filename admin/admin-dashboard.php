@@ -71,7 +71,7 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
         <img src="../images/bsitlogo.png" alt="logo">
         <ul style="margin-top: 15px;">
             <li><a href="#" onclick="showSection('dashboard')" aria-controls="dashboard" aria-selected="true"><i style="margin: 10px;" class="bi bi-clipboard-data-fill"></i>Dashboard</a></li>
-            <li><a href="#" onclick="showSection('home')" aria-controls="home"><i style="margin: 10px;" class="bi bi-houses-fill"></i>Home</a></li>
+            <li><a href="#" onclick="showSection('home')" aria-controls="home"><i style="margin: 10px;" class="bi bi-file-post-fill"></i> Post</a></li>
             <li><a href="#" onclick="showSection('student')" aria-controls="student"><i style="margin: 10px;" class="bi bi-mortarboard-fill"></i>Manage Student</a></li>
             <li><a href="#" onclick="showSection('announcements')" aria-controls="announcements"><i style="margin: 10px;" class="bi bi-newspaper"></i>announcements</a></li>
             <li><a href="adminForm.php" onclick="showSection('form')" aria-controls="form"><i style="margin: 10px;" class="bi bi-send-plus-fill"></i>Form</a></li>
@@ -169,38 +169,7 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
 
         <section id="home">
             <div class="left-section">
-                <div class="profile" onclick="openPopup()">
-                    <img src="../images-data/<?= htmlspecialchars($admin['adminProfile']) ?>" alt="Profile Image" class="profile-image">
-                    <input type="text" placeholder="Create a Post......">
-                    <button>POST</button>
-                </div>
 
-                <div class="popup-overlay" id="post-popup">
-                    <div class="post-popup">
-                        <div class="popup-header">
-                            <span>Create post</span>
-                            <button onclick="closePopup()">×</button>
-                        </div>
-                        <form action="uploadPost.php" method="POST" enctype="multipart/form-data">
-                            <div class="postpopup-content">
-                                <div class="profile-container">
-                                    <a href="studentProfile.php">
-                                        <img src="../images-data/<?= htmlspecialchars($admin['adminProfile']) ?>" alt="Profile Image" class="profile-pic">
-                                    </a>
-                                    <p class="profile-name"><?= htmlspecialchars($admin['admin_username']) ?></p>
-                                </div>
-                                <textarea name="content" placeholder="What on your mind? <?= htmlspecialchars($admin['admin_username']) ?>"></textarea>
-                                <div class="add-photos" onclick="triggerFileUpload()">
-                                    <input type="file" id="media-upload" name="media[]" multiple accept="image/*,video/*" style="display: none;" onchange="previewFiles(event)">
-                                    <p>Add photos/videos</p>
-                                </div><br>
-                                <div id="media-preview" class="media-grid"></div>
-                            </div>
-                            <button id="delete-post" class="cancel-button" style="display: none;" onclick="clearFiles()">Cancel Post</button>
-                            <button class="post-btn" type="submit">Post</button>
-                        </form>
-                    </div>
-                </div>
 
                 <div class="left-section">
                     <?php
@@ -354,7 +323,6 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
                                 <td><?= htmlspecialchars($student['firstname']); ?></td>
                                 <td><?= htmlspecialchars($student['lastname']); ?></td>
                                 <td>
-                                    <!-- Edit Button -->
                                     <a href="studentUpdate.php?id=<?= htmlspecialchars(string: $student['id']); ?>"
                                         style="display: inline-block; background-color: #3bd20f; color: #fff; padding: 10px 15px; font-size: 16px; text-align: center; text-decoration: none; border-radius: 5px; border: 1px solid transparent; transition: background-color 0.3s ease;"
                                         onmouseover="this.style.backgroundColor='#00ff00 ';"
@@ -362,8 +330,6 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
                                         <i class="bi bi-pencil-square" style="font-size: 16px;"></i>
                                     </a>
 
-
-                                    <!-- Delete Button -->
                                     <form action="deleteStudent.php" method="POST" style="display:inline;">
                                         <input type="hidden" name="id" value="<?= htmlspecialchars($student['id']); ?>">
                                         <button type="submit" style="display: inline-block; background-color:rgb(255, 0, 0); color: #fff; padding: 10px 15px; font-size: 16px; text-align: center; text-decoration: none; border-radius: 5px; border: 1px solid transparent; transition: background-color 0.3s ease;"
@@ -375,9 +341,9 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="5">No students found.</td>
-                        </tr>
+
+                        <h2 style="display: flex; align-items:center; justify-content: center; color: red ">No students found.</h2>
+
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -403,18 +369,19 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
         </script>
 
         <section id="announcements">
-            <h1>Reports</h1>
-            <p>View detailed reports and analytics.</p>
-            <form action="postAnnouncement.php" method="POST">
-                <label for="title">Title:</label>
-                <input type="text" id="title" name="title" required>
+            <h1 style="font-family: Arial, sans-serif; color: #333; margin-bottom: 10px;">Reports</h1>
+            <p style="font-family: Arial, sans-serif; color: #555; margin-bottom: 20px;">View detailed reports and analytics.</p>
+            <div style="display: flex; justify-content: space-between; gap: 20px; align-items: flex-start;">
+              
+                <form action="postAnnouncement.php" method="POST" style="border: 1px solid #ddd; padding: 20px; border-radius: 5px; width: 48%; background-color: #f9f9f9;">
+                    <label for="title" style="display: block; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Title:</label>
+                    <input type="text" id="title" name="title" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
 
-                <label for="content">Content:</label>
-                <textarea id="content" name="content" required></textarea>
+                    <label for="content" style="display: block; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Content:</label>
+                    <textarea id="content" name="content" required style="width: 100%; padding: 8px; height: 100px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 15px;"></textarea>
 
-                <button type="submit">Post Announcement</button>
-            </form>
-            <div class="right-section">
+                    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; font-family: Arial, sans-serif; font-size: 14px; border-radius: 4px; cursor: pointer;">Post Announcement</button>
+                </form>
                 <?php
 
                 $sql = "SELECT a.title, a.content, a.created_at, ad.admin_username AS admin_username ,ad.admin_name AS admin_name 
@@ -436,27 +403,46 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
                 }
                 ?>
 
-                <div class="announcement">
+                <div class="announcement" style="flex-grow: 1; margin-top: 0;">
                     <?php if (mysqli_num_rows($result) > 0): ?>
                         <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                            <div class="card">
-                                <div class="profile-info">
-                                    <strong><?php echo htmlspecialchars($row['admin_name']); ?></strong>
-                                    <small class="role">
-                                        <i class="bi bi-people-fill"></i>
-                                        <small style="margin: 0px;"><?php echo htmlspecialchars($row['admin_username']); ?></small>
-                                    </small>
-                                    <small class="time"><?php echo date("F j, Y, g:i a", strtotime($row['created_at'])); ?></small>
-                                    <p><?php echo htmlspecialchars($row['content']); ?></p>
-                                </div>
+                            <div class="card" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #fff; margin-bottom: 15px;">
 
+                                <div class="profile-info">
+                                    <strong style="font-family: Arial, sans-serif; font-size: 16px;"><?php echo htmlspecialchars($row['admin_name']); ?></strong>
+                                    <small class="role" style="display: block; color: #555; font-size: 12px;">
+                                        <i class="bi bi-people-fill"></i>
+                                        <small style="margin: 0;"><?php echo htmlspecialchars($row['admin_username']); ?></small>
+                                    </small>
+                                    <small class="time" style="display: block; color: #999; font-size: 12px; margin-top: 5px;"><?php echo date("F j, Y, g:i a", strtotime($row['created_at'])); ?></small>
+                                    <p style="margin-top: 10px; font-family: Arial, sans-serif; font-size: 14px; color: #333;"><?php echo htmlspecialchars($row['content']); ?></p>
+
+
+                                </div>
+                                <div style="display: flex;">
+                                    <form method="GET" action="editAnnouncement.php" style="margin: 0;">
+                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" style="background-color: #3498db; color: white; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer;">
+                                            Edit
+                                        </button>
+                                    </form>
+
+                                    <form method="POST" action="deleteAnnouncement.php">
+                                        <input type="hidden" name="announcement_id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" style="background-color: #e74c3c; color: white; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer;">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p>No announcements available.</p>
+                        <p style="font-family: Arial, sans-serif; color: #555; background-color: #333; padding: 10px; border-radius: 5px; color: white;">No announcements available.</p>
                     <?php endif; ?>
                 </div>
+
             </div>
+
         </section>
 
         <section id="notifications">
@@ -507,7 +493,7 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
                 }
             }
             ?>
-            <h2>Unapproved Students</h2>
+            <h2 style="display: flex; align-items:center; justify-content:center; margin-top: 10px; ">Unapproved Students</h2>
             <?php if ($unapproved_users->num_rows > 0): ?>
                 <form method="POST" action="approve_users.php">
                     <button type="submit" name="action" value="approve" style="background-color: #007bff; color: #fff; border: none; padding: 10px 20px; font-size: 14px; border-radius: 5px; cursor: pointer; margin-right: 10px; transition: background-color 0.3s ease;">Approve Selected</button>
@@ -548,7 +534,7 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
                     </table>
                 </form>
             <?php else: ?>
-                <p>No students awaiting approval.</p>
+                <p style="position:absolute; top:50%; left: 51%; ">No students awaiting approval.</p>
             <?php endif; ?>
         </section>
 
