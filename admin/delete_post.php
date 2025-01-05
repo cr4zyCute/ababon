@@ -10,7 +10,7 @@ if (!isset($_SESSION['admin_id'])) {
 if (isset($_POST['delete_post_id'])) {
     $postId = $_POST['delete_post_id'];
 
-    // Delete the post
+
     $query = "DELETE FROM posts WHERE id = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("i", $postId);

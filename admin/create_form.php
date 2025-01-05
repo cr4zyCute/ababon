@@ -1,18 +1,15 @@
 <?php
 include '../database/dbcon.php';
 
-// Add a new form
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_name = $_POST['form_name'];
 
-    // Insert the new form and check if it succeeded
     if ($conn->query("INSERT INTO forms (form_name) VALUES ('$form_name')") === TRUE) {
-        $form_id = $conn->insert_id; // Get the form ID of the inserted form
+        $form_id = $conn->insert_id;
     } else {
         die("Error inserting form: " . $conn->error);
     }
 
-    // Insert form fields
     foreach ($_POST['fields'] as $field) {
         $field_name = $field['name'];
         $field_type = $field['type'];
@@ -22,20 +19,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       VALUES ($form_id, '$field_name', '$field_type', $is_required)");
     }
 
-    // Redirect after successful form creation
     header('Location: adminForm.php');
 }
 
-// If you want to retain the values after submitting, you can prepopulate the fields here
 $existing_fields = isset($_POST['fields']) ? $_POST['fields'] : [];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Create Form</title>
 </head>
+
 <body>
     <h1>Create a New Form</h1>
     <form method="POST">
@@ -47,9 +44,9 @@ $existing_fields = isset($_POST['fields']) ? $_POST['fields'] : [];
         <div id="fields">
             <?php
             $fieldCount = 0;
-            // Display existing fields
+
             foreach ($existing_fields as $field) {
-                ?>
+            ?>
                 <div class="field">
                     <label>Field Name:</label>
                     <input type="text" name="fields[<?php echo $fieldCount; ?>][name]" value="<?php echo htmlspecialchars($field['name']); ?>" required>
@@ -63,7 +60,7 @@ $existing_fields = isset($_POST['fields']) ? $_POST['fields'] : [];
                     <label>Required:</label>
                     <input type="checkbox" name="fields[<?php echo $fieldCount; ?>][required]" <?php echo ($field['required']) ? 'checked' : ''; ?>>
                 </div>
-                <?php
+            <?php
                 $fieldCount++;
             }
             ?>
@@ -94,4 +91,5 @@ $existing_fields = isset($_POST['fields']) ? $_POST['fields'] : [];
         }
     </script>
 </body>
+
 </html>

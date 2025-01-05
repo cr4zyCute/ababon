@@ -67,29 +67,3 @@ function reveal() {
         }
     }
 }
-// const modal = document.getElementById("login-modal");
-// const closeModal = document.querySelector(".close"); 
-// const loginBtn = document.getElementById("login-btn");
-
-
-// loginBtn.onclick = function () {
-//   modal.style.display = "block";
-// };
-
-// closeModal.onclick = function () {
-//   modal.style.display = "none";
-// };
-
-// document.addEventListener('DOMContentLoaded', reveal);
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     const errorMessage = document.getElementById("error_message");
-
-//     if (errorMessage) {
-//         // Set a timeout to hide the error message after 5 seconds
-//         setTimeout(() => {
-//             errorMessage.style.display = "none";
-//         }, 3000); 
-//     }
-// });
-

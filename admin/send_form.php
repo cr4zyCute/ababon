@@ -1,17 +1,14 @@
 <?php
 include '../database/dbcon.php';
 
-// Check if form data is received
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_id = $_POST['form_id'];
     $student_id = $_POST['student_id'];
 
-    // Insert the form assignment into the student_forms table
     $stmt = $conn->prepare("INSERT INTO student_forms (student_id, form_id) VALUES (?, ?)");
     $stmt->bind_param("ii", $student_id, $form_id);
 
     if ($stmt->execute()) {
-        // After assigning, send an email to the student
         $student_result = $conn->query("SELECT email FROM credentials WHERE id = $student_id");
         $student = $student_result->fetch_assoc();
 
@@ -34,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -87,15 +86,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             from {
                 transform: translateY(-50px);
             }
+
             to {
                 transform: translateY(0);
             }
         }
 
         .popup img {
-            width: 80px; /* Adjust size as needed */
+            width: 80px;
             height: 80px;
-            margin: 20px auto; /* Add spacing around the image */
+            margin: 20px auto;
         }
 
         .popup p {
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .close-btn {
-            background: #4CAF50; /* Green for success */
+            background: #4CAF50;
             color: white;
             border: none;
             padding: 10px 15px;
@@ -118,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div id="popup-container">
         <div class="popup">
@@ -125,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <img src="../images/check.png" alt="Check Mark">
             <p>Your operation was successful!</p>
             <a href="adminForm.php">
-            <button class="close-btn" onclick="closePopup()">OK</button>
+                <button class="close-btn" onclick="closePopup()">OK</button>
             </a>
         </div>
     </div>
@@ -136,4 +137,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </script>
 </body>
+
 </html>

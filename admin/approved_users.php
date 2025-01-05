@@ -6,10 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approve_users'])) {
     $approved_user_ids = $_POST['approve_users'];
 
     foreach ($approved_user_ids as $user_id) {
-        // Approve the user
+
         $conn->query("UPDATE users SET approved = 1 WHERE id = $user_id");
 
-        // Add a notification for the user
         $message = "Your account has been approved by the admin.";
         $created_at = date('Y-m-d H:i:s');
         $stmt = $conn->prepare("INSERT INTO notifications (user_id, message, created_at, is_read) VALUES (?, ?, ?, 0)");
@@ -20,4 +19,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['approve_users'])) {
     header('Location: admin_notifications.php');
     exit;
 }
-?>

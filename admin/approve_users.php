@@ -7,14 +7,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $approved_user_ids = array_map('intval', $approved_user_ids);
 
         foreach ($approved_user_ids as $student_id) {
-            // Approve user
             $update_query = $conn->prepare("UPDATE student SET approved = 1, rejected = 0 WHERE id = ?");
             $update_query->bind_param('i', $student_id);
             if (!$update_query->execute()) {
                 die("Error updating student approval: " . $update_query->error);
             }
 
-            // Add approval notification
             $message = "Your account has been approved by the admin.";
             $insert_query = $conn->prepare("INSERT INTO notifications (student_id, message, created_at, is_read) VALUES (?, ?, NOW(), 0)");
             $insert_query->bind_param('is', $student_id, $message);
@@ -29,14 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $rejected_user_ids = array_map('intval', $rejected_user_ids);
 
         foreach ($rejected_user_ids as $student_id) {
-            // Reject user
             $update_query = $conn->prepare("UPDATE student SET rejected = 1, approved = 0 WHERE id = ?");
             $update_query->bind_param('i', $student_id);
             if (!$update_query->execute()) {
                 die("Error updating student rejection: " . $update_query->error);
             }
 
-            // Add rejection notification
             $message = "Your account has been rejected by the admin.";
             $insert_query = $conn->prepare("INSERT INTO notifications (student_id, message, created_at, is_read) VALUES (?, ?, NOW(), 0)");
             $insert_query->bind_param('is', $student_id, $message);
@@ -45,10 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
-
-    // Redirect after processing
     header('Location: admin_notifications.php');
     exit;
 }
-
-?>

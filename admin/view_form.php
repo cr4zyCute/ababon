@@ -7,7 +7,7 @@ if (!isset($_SESSION['student_id'])) {
 
 include '../database/dbcon.php';
 
-// Get the form ID from the query string
+
 if (!isset($_GET['form_id']) || empty($_GET['form_id'])) {
     echo "No form selected.";
     exit;
@@ -15,7 +15,6 @@ if (!isset($_GET['form_id']) || empty($_GET['form_id'])) {
 
 $form_id = intval($_GET['form_id']);
 
-// Fetch form details
 $form_query = $conn->prepare("SELECT * FROM forms WHERE id = ?");
 $form_query->bind_param('i', $form_id);
 $form_query->execute();
@@ -28,7 +27,6 @@ if ($form_result->num_rows === 0) {
 
 $form = $form_result->fetch_assoc();
 
-// Fetch form fields
 $fields_query = $conn->prepare("SELECT * FROM form_fields WHERE form_id = ?");
 $fields_query->bind_param('i', $form_id);
 $fields_query->execute();

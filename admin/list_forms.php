@@ -1,7 +1,6 @@
 <?php
 include '../database/dbcon.php';
 
-// Fetch all forms
 $forms = $conn->query("SELECT * FROM forms");
 ?>
 <!DOCTYPE html>
