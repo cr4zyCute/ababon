@@ -167,6 +167,82 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
             </div>
         </section>
 
+        <section id="announcements">
+            <h1 style="font-family: Arial, sans-serif; color: #333; margin-bottom: 10px;">Reports</h1>
+            <p style="font-family: Arial, sans-serif; color: #555; margin-bottom: 20px;">View detailed reports and analytics.</p>
+            <div style="display: flex; justify-content: space-between; gap: 20px; align-items: flex-start;">
+
+                <form action="postAnnouncement.php" method="POST" style="border: 1px solid #ddd; padding: 20px; border-radius: 5px; width: 48%; background-color: #f9f9f9;">
+                    <label for="title" style="display: block; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Title:</label>
+                    <input type="text" id="title" name="title" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
+
+                    <label for="content" style="display: block; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Content:</label>
+                    <textarea id="content" name="content" required style="width: 100%; padding: 8px; height: 100px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 15px;"></textarea>
+
+                    <button type="submit" style="background-color: #007bff; color: white; border: none; padding: 10px 20px; font-family: Arial, sans-serif; font-size: 14px; border-radius: 4px; cursor: pointer;">Post Announcement</button>
+                </form>
+
+                <?php
+                // Fetch announcements
+                $sql = "SELECT a.id, a.title, a.content, a.created_at, ad.admin_username, ad.admin_name 
+                FROM announcements a 
+                JOIN admin ad ON a.admin_id = ad.id 
+                ORDER BY a.created_at DESC";
+                $result = mysqli_query($conn, $sql);
+
+                // Display announcements
+                ?>
+                <div class="announcement" style="flex-grow: 1; margin-top: 0;">
+                    <?php if (mysqli_num_rows($result) > 0): ?>
+                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                            <div class="card" style="border: 1px solid #ddd; padding: 15px; border-radius: 5px; background-color: #fff; margin-bottom: 15px;">
+                                <div class="profile-info">
+                                    <strong style="font-family: Arial, sans-serif; font-size: 16px;">
+                                        <?php echo htmlspecialchars($row['admin_name']); ?>
+                                    </strong>
+                                    <small class="role" style="display: block; color: #555; font-size: 12px;">
+                                        <i class="bi bi-people-fill"></i>
+                                        <small style="margin: 0;"> <?php echo htmlspecialchars($row['admin_username']); ?></small>
+                                    </small>
+                                    <small class="time" style="display: block; color: #999; font-size: 12px; margin-top: 5px;">
+                                        <?php echo date("F j, Y, g:i a", strtotime($row['created_at'])); ?>
+                                    </small>
+                                    <p style="margin-top: 10px; font-family: Arial, sans-serif; font-size: 14px; color: #333;">
+                                        <?php echo htmlspecialchars($row['content']); ?>
+                                    </p>
+                                    <form action="" method="POST">
+                                        <input type="hidden" name="announcement_id" value="<?php echo $row['id']; ?>">
+                                        <button type="submit" name="delete" style="background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        <?php endwhile; ?>
+                    <?php else: ?>
+                        <p style="font-family: Arial, sans-serif; font-size: 14px; color: #555;">No announcements found.</p>
+                    <?php endif; ?>
+
+                    <?php
+                    // Handle delete request
+                    if (isset($_POST['delete']) && isset($_POST['announcement_id'])) {
+                        $announcement_id = mysqli_real_escape_string($conn, $_POST['announcement_id']);
+
+                        $delete_sql = "DELETE FROM announcements WHERE id = '$announcement_id'";
+                        if (mysqli_query($conn, $delete_sql)) {
+                            echo "<p style='color: green;'>Announcement deleted successfully!</p>";
+                        } else {
+                            echo "<p style='color: red;'>Error deleting announcement: " . mysqli_error($conn) . "</p>";
+                        }
+
+                        // Refresh page to show updated announcements
+                        echo "<script>window.location.href = window.location.href;</script>";
+                    }
+                    ?>
+                </div>
+            </div>
+        </section>
+
+
+
         <section id="home">
             <div class="left-section">
 
@@ -368,11 +444,11 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
             });
         </script>
 
-        <section id="announcements">
+        <!-- <section id="announcements">
             <h1 style="font-family: Arial, sans-serif; color: #333; margin-bottom: 10px;">Reports</h1>
             <p style="font-family: Arial, sans-serif; color: #555; margin-bottom: 20px;">View detailed reports and analytics.</p>
             <div style="display: flex; justify-content: space-between; gap: 20px; align-items: flex-start;">
-              
+
                 <form action="postAnnouncement.php" method="POST" style="border: 1px solid #ddd; padding: 20px; border-radius: 5px; width: 48%; background-color: #f9f9f9;">
                     <label for="title" style="display: block; font-family: Arial, sans-serif; font-size: 14px; margin-bottom: 5px;">Title:</label>
                     <input type="text" id="title" name="title" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
@@ -428,22 +504,29 @@ $unapproved_students_count = $unapproved_students_result->fetch_assoc()['unappro
                                     </form>
 
                                     <form method="POST" action="deleteAnnouncement.php">
-                                        <input type="hidden" name="announcement_id" value="<?php echo $row['id']; ?>">
-                                        <button type="submit" style="background-color: #e74c3c; color: white; padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer;">
+                                        <input type="hidden" name="announcement_id" value="<?php echo (int) $row['id']; ?>">
+                                        <button type="submit" style="background-color: #e74c3c; color: white; border: none; padding: 8px 12px;">
                                             Delete
                                         </button>
                                     </form>
+
+
+
                                 </div>
                             </div>
                         <?php endwhile; ?>
                     <?php else: ?>
-                        <p style="font-family: Arial, sans-serif; color: #555; background-color: #333; padding: 10px; border-radius: 5px; color: white;">No announcements available.</p>
+                        <?php if (isset($_GET['message']) && $_GET['message'] === 'deleted'): ?>
+                            <div style="color: green; margin-bottom: 20px; font-family: Arial, sans-serif;">
+                                Announcement deleted successfully!
+                            </div>
+                        <?php endif; ?>
+
+
                     <?php endif; ?>
                 </div>
-
             </div>
-
-        </section>
+        </section> -->
 
         <section id="notifications">
             <?php

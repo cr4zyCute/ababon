@@ -1,32 +1,32 @@
 <?php
-include '../database/dbcon.php';
-session_start();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $announcement_id = $_POST['announcement_id'] ?? null;
 
+    if (!$announcement_id || !is_numeric($announcement_id)) {
+        header("Location: adminPage.php?message=error&details=Invalid announcement ID.");
+        exit;
+    }
 
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: admin-login.php");
-    exit();
-}
+    // Database connection
+    include 'db_connection.php'; // Adjust as needed
 
+    $stmt = $conn->prepare("SELECT * FROM announcements WHERE id = ?");
+    $stmt->bind_param("i", $announcement_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['announcement_id'])) {
-    $announcement_id = intval($_POST['announcement_id']);
+    if ($result->num_rows === 0) {
+        header("Location: adminPage.php?message=error&details=Invalid announcement ID.");
+        exit;
+    }
 
-
-    $query = "DELETE FROM announcements WHERE id = ?";
-    $stmt = $conn->prepare($query);
+    // If the ID is valid, proceed to delete
+    $stmt = $conn->prepare("DELETE FROM announcements WHERE id = ?");
     $stmt->bind_param("i", $announcement_id);
 
     if ($stmt->execute()) {
-        $_SESSION['message'] = "Announcement deleted successfully.";
+        header("Location: adminPage.php?message=success");
     } else {
-        $_SESSION['message'] = "Error deleting announcement.";
+        header("Location: adminPage.php?message=error&details=Failed to delete the announcement.");
     }
-
-    $stmt->close();
-    header("Location: admin-dashboard.php");
-    exit();
-} else {
-    header("Location: admin-dashboard.php");
-    exit();
 }
