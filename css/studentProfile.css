@@ -4,12 +4,9 @@ body {
     padding: 0;
 }
 
-
 header {
     background-color: #4267B2;
     color: white;
-
-
 }
 
 nav {
@@ -158,7 +155,7 @@ nav {
 .profile-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: column;
     padding: 20px;
 }
 
